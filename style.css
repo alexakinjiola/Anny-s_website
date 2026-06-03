@@ -900,6 +900,11 @@ ul { list-style: none; }
 }
 
 .steps {
+  Display: grid;
+  grid-template-columns: 1fr;
+
+
+
   background: var(--white);
   padding: 100px 0 120px;
 }
@@ -1039,3 +1044,8 @@ ul { list-style: none; }
 
   .footer__bottom-inner { flex-direction: column; gap: 8px; text-align: center; }
 }
+
+
+
+
+
