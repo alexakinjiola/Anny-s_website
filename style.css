@@ -1,0 +1,50 @@
+2. CSS (style.css)
+This provides the professional, clean aesthetic (soft pink tones, clear typography, and responsive layouts).
+
+CSS
+:root {
+    --bg-pink: #fdf5f5;
+    --accent-pink: #d4a373; /* Or your brand pink */
+    --text-dark: #333;
+}
+
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-pink);
+    color: var(--text-dark);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 5%;
+    align-items: center;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    padding: 50px 5%;
+}
+
+.hero-content { flex: 1; }
+
+.cta-btn {
+    background-color: var(--text-dark);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cta-btn:hover { background-color: var(--accent-pink); }
+
+/* Responsive Grid for Products */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 5%;
+}
