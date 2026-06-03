@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — AnnyHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">Annyshub</a>
+      <nav class="nav__links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="index.html#collections" class="nav__link">Collections</a>
+        <a href="how-to-order.html" class="nav__link">How to Order</a>
+        <a href="about.html" class="nav__link active">About Us</a>
+      </nav>
+      <div class="nav__actions">
+        <div class="nav__search">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search for products…" />
+        </div>
+        <button class="nav__cart" aria-label="Cart">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </button>
+        <a href="https://wa.me/2348157334619" class="btn btn--dark btn--sm" target="_blank">Order via WhatsApp</a>
+      </div>
+      <button class="nav__burger" id="navBurger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav__mobile" id="navMobile">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="index.html#collections" class="nav__link">Collections</a>
+      <a href="how-to-order.html" class="nav__link">How to Order</a>
+      <a href="about.html" class="nav__link active">About Us</a>
+      <a href="https://wa.me/2348157334619" class="btn btn--dark btn--sm" target="_blank">Order via WhatsApp</a>
+    </div>
+  </header>
+
+  <!-- ABOUT HERO -->
+  <section class="about-hero">
+    <div class="about-hero__inner container">
+      <p class="section-label" style="color:rgba(255,255,255,0.7)">Our Story</p>
+      <h1>We Exist because Nigerian Women <em>Deserve Better</em></h1>
+      <p>AnnysHub is a dedicated jewellery brand and showcase website built exclusively for Nigerian women — offering a carefully curated collection of pieces across every price point, from affordable everyday styles to premium statement jewellery.</p>
+    </div>
+  </section>
+
+  <!-- MISSION + VISION -->
+  <section class="about-split">
+    <div class="about-split__item">
+      <div class="about-split__img">
+        <img src="https://images.unsplash.com/photo-1588605279700-1add27ef7e93?w=700&q=80" alt="Nigerian woman wearing jewellery" />
+      </div>
+      <div class="about-split__text about-split__text--right">
+        <p class="section-label">Our Mission</p>
+        <h2>To make jewellery shopping trustworthy, beautiful, and effortless for every Nigerian woman</h2>
+        <p>AnnysHub exists to close the gap between what Nigerian women deserve from an online jewellery experience and what they've been forced to accept. We are building a brand that earns trust with every single order — through honesty, quality, and a personal touch that no general marketplace can replicate.</p>
+      </div>
+    </div>
+
+    <div class="about-split__item about-split__item--reverse">
+      <div class="about-split__text about-split__text--left">
+        <p class="section-label">Our Vision</p>
+        <h2>To become the most trusted jewellery brand for Nigerian women across Africa and the diaspora</h2>
+        <p>We are starting in Nigeria — but we are thinking bigger. Every Nigerian woman, wherever she is in the world, should have access to authentic, beautiful jewellery from a brand that was built specifically for her. That is the future we are working toward, one order at a time.</p>
+      </div>
+      <div class="about-split__img">
+        <img src="https://images.unsplash.com/photo-1601121141418-7bec3c8a1c37?w=700&q=80" alt="Jewellery close-up" />
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="container cta-banner__inner">
+      <div class="cta-banner__text">
+        <p class="section-label" style="color:var(--rose-light)">Ready to find your piece?</p>
+        <h2>Order Directly.<br/> No Stress. No<br/> Surprises.</h2>
+        <p>Browse the collection, find what you love, and send us a WhatsApp message. We'll confirm your order, give you the full price including delivery, and keep you updated every step of the way.</p>
+      </div>
+      <a href="https://wa.me/2348157334619" class="btn btn--dark btn--lg" target="_blank">Order via WhatsApp</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <h3>Carefully Selected<br/> for You</h3>
+        <p>Join 1000+ designers, innovators, and creators who have embraced excellence, innovation, and creativity.</p>
+        <a href="index.html#collections" class="footer__shop-link">SHOP OUR COLLECTION</a>
+      </div>
+      <div class="footer__col">
+        <h4>Shop</h4>
+        <a href="#">Necklaces</a>
+        <a href="#">Earrings</a>
+        <a href="#">Bracelets</a>
+        <a href="#">Gift Sets</a>
+        <a href="#">New Arrivals</a>
+      </div>
+      <div class="footer__col">
+        <h4>Information</h4>
+        <a href="about.html">About Us</a>
+        <a href="#">Delivery Information</a>
+        <a href="#">Returns Policy</a>
+      </div>
+      <div class="footer__col">
+        <h4>Contact</h4>
+        <a href="mailto:annyshub98@gmail.com">annyshub98@gmail.com</a>
+        <a href="tel:+2348157334619">+2348157334619</a>
+        <span>Lagos, Nigeria</span>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="container footer__bottom-inner">
+        <span><a href="#">Privacy Policy</a> &bull; <a href="#">Terms of Use</a></span>
+        <span>© 2026 AnnyHub. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
