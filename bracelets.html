@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>How to Order — Annyshub</title>
+  <title>Necklaces — Annyshub</title>
+  <meta name="description" content="Shop Necklaces at Annyshub. 100% non-tarnish, curated for the Nigerian woman. Nationwide delivery." />
   <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-page="how-to-order">
+<body data-page="necklaces">
 
   <header class="nav" id="nav">
     <div class="nav__inner">
@@ -31,55 +32,36 @@
     <div class="nav__mobile" id="navMobile" aria-hidden="true">
       <a href="index.html" class="nav__mobile-link" data-nav="home">Home</a>
       <a href="collections.html" class="nav__mobile-link" data-nav="collections">Collections</a>
-      <a href="how-to-order.html" class="nav__mobile-link active" data-nav="how-to-order">How to Order</a>
+      <a href="how-to-order.html" class="nav__mobile-link" data-nav="how-to-order">How to Order</a>
       <a href="about.html" class="nav__mobile-link" data-nav="about">About Us</a>
       <a href="https://wa.me/2348157334619?text=Hi%2C%20I%27d%20like%20to%20place%20an%20order" class="btn btn--plum btn--sm" target="_blank" rel="noopener">Order via WhatsApp</a>
     </div>
   </header>
 
-  <section class="page-hero page-hero--blush">
-    <div class="container page-hero__inner animate-fadein">
-      <p class="eyebrow">Simple. Personal. Fast.</p>
-      <h1>How to Order<br>from <em>Annyshub</em></h1>
-      <p>No complicated checkouts. No failed payments. Just browse, pick what you love, and send us a WhatsApp message. We handle the rest.</p>
+  <section class="cat-page-hero">
+    <div class="container">
+      <p class="eyebrow">Browse Our Pieces</p>
+      <h1>NECKLACES</h1>
+      <p>Curated necklaces for the Nigerian woman — from everyday pendants to statement pieces.</p>
     </div>
   </section>
 
-  <section class="section bg-white">
+  <main class="section bg-white">
     <div class="container">
-      <h2 class="steps-heading">4 Simple Steps to Your Perfect Piece</h2>
-      <div class="steps-grid">
-        <div class="step-card reveal">
-          <div class="step-card__num">1</div>
-          <div class="step-card__body">
-            <h3>Browse the Collection</h3>
-            <p>Take your time exploring Annyshub's website. Use the category filters — Necklaces, Earrings, Rings, Bracelets — or browse by price range and material. Every product page shows real photos, verified buyer reviews, full pricing including delivery, and all available sizes and colours.</p>
-          </div>
-        </div>
-        <div class="step-card reveal" style="--delay:.1s">
-          <div class="step-card__num">2</div>
-          <div class="step-card__body">
-            <h3>Choose Your Piece</h3>
-            <p>When you find a piece you love, note the full product name, your preferred material (gold plated, rose gold, silver), your size or chain length, and your delivery address. All of this is shown clearly on the product page so there's no guessing.</p>
-          </div>
-        </div>
-        <div class="step-card reveal" style="--delay:.2s">
-          <div class="step-card__num">3</div>
-          <div class="step-card__body">
-            <h3>Send Your WhatsApp Order</h3>
-            <p>Tap the "Order via WhatsApp" button on any product page or anywhere on the website. A pre-filled message will open in WhatsApp with the product details included. Just add your name, delivery address, and any specific requests — and hit send. We respond within minutes during business hours.</p>
-          </div>
-        </div>
-        <div class="step-card reveal" style="--delay:.3s">
-          <div class="step-card__num">4</div>
-          <div class="step-card__body">
-            <h3>Pay &amp; Receive</h3>
-            <p>Once we confirm your order, we'll send you our bank account details for transfer. Payment is confirmed instantly and we begin packaging your order right away. Lagos orders typically arrive same day or next day. Other states within 2–5 working days.</p>
-          </div>
-        </div>
+      <div class="filter-bar" style="justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:var(--muted)" id="productCount">Loading…</span>
+        <select class="admin-filter-select" id="sortSelect">
+          <option value="default">Sort: Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name">Name: A–Z</option>
+        </select>
+      </div>
+      <div class="shop-grid" id="categoryGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted)">Loading products…</div>
       </div>
     </div>
-  </section>
+  </main>
 
   <section class="cta-banner">
     <div class="container cta-banner__inner">
