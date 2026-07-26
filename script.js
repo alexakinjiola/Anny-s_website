@@ -286,21 +286,50 @@ function attachCardHandlers(container) {
     attachCardHandlers(el);
   };
 
+  const BUILT_IN = ['necklace', 'watch', 'bracelet', 'set', 'combo'];
+
   renderSection('necklacesGrid', 'necklace');
   renderSection('watchesGrid',   'watch');
   renderSection('braceletsGrid', 'bracelet');
   renderSection('setsGrid',      'set');
   renderSection('combosGrid',    'combo');
 
-  // Also render any custom categories
-  if (AnnyshubData.getCats) {
-    AnnyshubData.getCats().forEach(cat => {
-      const dynGrid = document.getElementById(`dynGrid_${cat.id}`);
-      if (dynGrid) { dynGrid.innerHTML = AnnyshubData.getByCategory(cat.id).slice(0,4).map(buildShopCard).join(''); attachCardHandlers(dynGrid); }
-    });
+  // Build full sections for any custom categories added via admin
+  const dynWrap = document.getElementById('dynamicCatSections');
+  const filterBar = document.getElementById('filterBarWrap');
+  if (dynWrap && window.AnnyshubData?.getCats) {
+    const customCats = AnnyshubData.getCats().filter(c => !BUILT_IN.includes(c.id));
+    if (customCats.length) {
+      dynWrap.innerHTML = customCats.map(cat => `
+        <div class="coll-section" data-category="${cat.id}">
+          <div class="coll-section__header">
+            <h2>${cat.icon ? cat.icon + ' ' : ''}${cat.label}</h2>
+          </div>
+          <div class="shop-grid" id="dynGrid_${cat.id}"></div>
+        </div>`).join('');
+
+      customCats.forEach(cat => {
+        const el = document.getElementById(`dynGrid_${cat.id}`);
+        if (!el) return;
+        const products = AnnyshubData.getByCategory(cat.id).slice(0, 4);
+        el.innerHTML = products.length ? products.map(buildShopCard).join('') : '<p style="color:var(--muted);font-size:14px">No products in this category yet.</p>';
+        attachCardHandlers(el);
+      });
+
+      // Add matching filter buttons
+      if (filterBar) {
+        customCats.forEach(cat => {
+          const btn = document.createElement('button');
+          btn.className = 'filter-btn';
+          btn.dataset.filter = cat.id;
+          btn.textContent = cat.label;
+          filterBar.appendChild(btn);
+        });
+      }
+    }
   }
 
-  // Filter buttons
+  // Filter buttons (bind after all sections + custom buttons exist)
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));

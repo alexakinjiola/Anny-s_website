@@ -54,20 +54,70 @@
   </div>
 </section>
 
-<main class="section bg-white">
+<main class="collections-page">
   <div class="container">
-    <div id="filterBarWrap" class="filter-bar" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-      <span style="font-size:13px;color:var(--muted)" id="productCount">Loading&hellip;</span>
-      <select id="sortSelect" style="padding:9px 16px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border-radius:50px;border:1.5px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;outline:none">
-        <option value="default">Sort: Default</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="name">Name: A&ndash;Z</option>
-      </select>
+
+    <div class="filter-bar" id="filterBarWrap">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="necklace">Necklaces</button>
+      <button class="filter-btn" data-filter="bracelet">Bracelets</button>
+      <button class="filter-btn" data-filter="watch">Wristwatches</button>
+      <button class="filter-btn" data-filter="set">Sets</button>
+      <button class="filter-btn" data-filter="combo">Combo Deals</button>
     </div>
-    <div class="shop-grid" id="categoryGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:48px 0;color:var(--muted)">Loading products&hellip;</div>
+
+    <div class="coll-section" data-category="necklace">
+      <div class="coll-section__header">
+        <h2>Necklaces</h2>
+        <a href="necklaces.html" class="text-link">View All →</a>
+      </div>
+      <div class="shop-grid" id="necklacesGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:32px 0;color:var(--muted)">Loading…</div>
+      </div>
     </div>
+
+    <div class="coll-section" data-category="watch">
+      <div class="coll-section__header">
+        <h2>Wrist Watches</h2>
+        <a href="wristwatches.html" class="text-link">View All →</a>
+      </div>
+      <div class="shop-grid" id="watchesGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:32px 0;color:var(--muted)">Loading…</div>
+      </div>
+    </div>
+
+    <div class="coll-section" data-category="bracelet">
+      <div class="coll-section__header">
+        <h2>Bracelets</h2>
+        <a href="bracelets.html" class="text-link">View All →</a>
+      </div>
+      <div class="shop-grid" id="braceletsGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:32px 0;color:var(--muted)">Loading…</div>
+      </div>
+    </div>
+
+    <div class="coll-section" data-category="set">
+      <div class="coll-section__header">
+        <h2>Sets</h2>
+        <a href="collections.html" class="text-link">View All →</a>
+      </div>
+      <div class="shop-grid" id="setsGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:32px 0;color:var(--muted)">Loading…</div>
+      </div>
+    </div>
+
+    <div class="coll-section" data-category="combo">
+      <div class="coll-section__header">
+        <h2>Combo Deals</h2>
+        <a href="collections.html" class="text-link">View All →</a>
+      </div>
+      <div class="shop-grid" id="combosGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:32px 0;color:var(--muted)">Loading…</div>
+      </div>
+    </div>
+
+    <div id="dynamicCatSections"></div>
+
   </div>
 </main>
 
