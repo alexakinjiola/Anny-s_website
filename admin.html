@@ -1,216 +1,883 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Admin Panel — Annyshub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Annyshub Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <style>
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.6;color:#2a1520;overflow-x:hidden}
+img{display:block;max-width:100%}a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:inherit}input,select,textarea{font-family:inherit}
+:focus-visible{outline:2px solid #7b2d52;outline-offset:2px;border-radius:3px}
+
+/* ── VARS ── */
+:root{
+  --p9:#2e0f1e;--p7:#5c2040;--p5:#7b2d52;--p3:#a3446e;
+  --r5:#c0607a;--r3:#e0a0b0;--r1:#f5d4de;
+  --b2:#fce8ee;--b1:#fdf0f4;--cream:#fffaf7;--white:#fff;
+  --dark:#18100e;--tx:#3d2535;--mu:#8c6070;--bo:#e8d4db;--bol:#f2e4e8;
+  --ok:#2a7a4e;--er:#c0392b;--wa:#b45309;
+  --fd:'Cormorant Garamond',serif;
+  --sb:240px;--th:56px;--r:8px;--rl:14px;--rxl:20px;
+  --s0:0 1px 3px rgba(60,20,40,.08);--s1:0 3px 12px rgba(60,20,40,.12);--s2:0 8px 28px rgba(60,20,40,.16);--s3:0 20px 56px rgba(60,20,40,.22);
+  --ease:cubic-bezier(.25,.46,.45,.94);--spring:cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ── LOGIN ── */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--p9) 0%,var(--p5) 100%);padding:20px}
+.login-card{background:var(--white);border-radius:var(--rxl);padding:44px 40px;width:100%;max-width:400px;box-shadow:var(--s3)}
+.login-logo{font-family:var(--fd);font-size:34px;font-style:italic;font-weight:700;color:var(--p7);margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--mu);margin-bottom:32px}
+.login-hint{background:var(--b1);border-radius:var(--r);padding:12px 14px;margin-top:20px;font-size:12px;color:var(--mu);text-align:center}
+.login-hint strong{color:var(--p7)}
+
+/* ── APP ── */
+.app{display:none;min-height:100vh}
+.app.on{display:flex}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sb);background:var(--p9);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .3s var(--ease);overflow-y:auto}
+.sidebar__logo{padding:20px 20px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar__logo-name{font-family:var(--fd);font-size:24px;font-style:italic;font-weight:700;color:var(--white)}
+.sidebar__logo-tag{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:2px}
+.sidebar__nav{flex:1;padding:12px 0}
+.sidebar__sec{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);padding:14px 20px 5px}
+.sidebar__btn{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.6);border:none;background:none;width:100%;text-align:left;cursor:pointer;transition:background .18s,color .18s;border-radius:0}
+.sidebar__btn svg{flex-shrink:0;opacity:.65}
+.sidebar__btn:hover,.sidebar__btn.on{background:rgba(255,255,255,.1);color:var(--white)}
+.sidebar__btn.on svg{opacity:1}
+.sidebar__btn.danger{color:rgba(255,100,100,.7)}
+.sidebar__btn.danger:hover{background:rgba(200,50,50,.15);color:#ff8888}
+.sidebar__foot{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar__site-link{display:flex;align-items:center;gap:8px;font-size:12.5px;color:rgba(255,255,255,.45);transition:color .18s}
+.sidebar__site-link:hover{color:var(--white)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;min-height:100vh;background:#f5f0f2}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--th);background:var(--white);border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:50;box-shadow:var(--s0)}
+.topbar__left{display:flex;align-items:center;gap:12px}
+.topbar__title{font-family:var(--fd);font-size:21px;font-weight:700;color:var(--dark)}
+.topbar__right{display:flex;align-items:center;gap:8px}
+.burger-btn{display:none;background:none;border:none;padding:6px;border-radius:var(--r);color:var(--dark)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12.5px;font-weight:600;letter-spacing:.04em;padding:9px 16px;border-radius:var(--r);border:none;cursor:pointer;transition:all .18s;white-space:nowrap;text-decoration:none;line-height:1}
+.btn-primary{background:var(--p7);color:var(--white)}.btn-primary:hover{background:var(--p9);box-shadow:0 4px 14px rgba(60,20,40,.28);transform:translateY(-1px)}
+.btn-secondary{background:var(--white);color:var(--p7);border:1.5px solid var(--bo)}.btn-secondary:hover{border-color:var(--p7);background:var(--b1)}
+.btn-danger{background:#fdecea;color:var(--er);border:1.5px solid #fbbcb8}.btn-danger:hover{background:var(--er);color:var(--white)}
+.btn-ok{background:#e6f7ee;color:var(--ok);border:1.5px solid #a8dfc0}.btn-ok:hover{background:var(--ok);color:var(--white)}
+.btn-sm{padding:6px 12px;font-size:11.5px}.btn-lg{padding:13px 28px;font-size:14px}.btn-full{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+
+/* ── CONTENT ── */
+.content{padding:24px;max-width:1300px;width:100%}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:4px;background:var(--white);border:1px solid var(--bo);border-radius:var(--rl);padding:4px;margin-bottom:24px;flex-wrap:wrap}
+.tab-btn{padding:8px 18px;font-size:12.5px;font-weight:600;letter-spacing:.04em;border-radius:10px;border:none;background:none;color:var(--mu);cursor:pointer;transition:all .18s;white-space:nowrap}
+.tab-btn.on{background:var(--p7);color:var(--white);box-shadow:0 2px 8px rgba(92,32,64,.3)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat{background:var(--white);border:1px solid var(--bol);border-radius:var(--rl);padding:18px 20px;box-shadow:var(--s0)}
+.stat.accent{background:linear-gradient(135deg,var(--p7),var(--p3));border-color:transparent}
+.stat__lbl{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:6px}
+.stat.accent .stat__lbl{color:rgba(255,255,255,.65)}
+.stat__val{font-family:var(--fd);font-size:36px;font-weight:700;line-height:1;color:var(--p7)}
+.stat.accent .stat__val{color:var(--white)}
+.stat__sub{font-size:11.5px;color:var(--mu);margin-top:3px}
+.stat.accent .stat__sub{color:rgba(255,255,255,.55)}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--bo);border-radius:var(--r);padding:0 12px;height:38px;flex:1;min-width:160px;max-width:300px;transition:border-color .2s}
+.search-box:focus-within{border-color:var(--p5)}.search-box svg{color:var(--mu);flex-shrink:0}
+.search-box input{flex:1;border:none;outline:none;font-size:13.5px;color:var(--dark);background:none}
+.search-box input::placeholder{color:var(--mu)}
+.f-select{height:38px;padding:0 12px;border:1.5px solid var(--bo);border-radius:var(--r);font-size:13px;color:var(--dark);background:var(--white);cursor:pointer;outline:none;transition:border-color .2s}
+.f-select:focus{border-color:var(--p5)}
+.toolbar__right{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--white);border:1px solid var(--bol);border-radius:var(--rl);overflow:hidden;box-shadow:var(--s0)}
+.table-empty{padding:56px 20px;text-align:center;color:var(--mu)}
+.table-empty .ico{font-size:40px;margin-bottom:12px}
+.table-empty h3{font-size:18px;font-weight:600;color:var(--dark);margin-bottom:4px}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:11px 14px;text-align:left;background:#fdf8f9;border-bottom:1px solid var(--bo);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--bol);font-size:13.5px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fdf8f9}
+.td-prod{display:flex;align-items:center;gap:11px}
+.td-img{width:50px;height:50px;border-radius:7px;overflow:hidden;flex-shrink:0;background:var(--b1);border:1px solid var(--bo)}
+.td-img img{width:100%;height:100%;object-fit:cover}
+.td-name{font-weight:600;color:var(--dark);max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.td-sub{font-size:11.5px;color:var(--mu);margin-top:1px}
+.td-price{font-family:var(--fd);font-size:17px;font-weight:700;color:var(--p7)}
+.td-actions{display:flex;gap:5px}
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:50px;white-space:nowrap}
+.badge-in{background:#e6f7ee;color:var(--ok)}.badge-out{background:#fdecea;color:var(--er)}
+.badge-feat{background:var(--b2);color:var(--p5)}.badge-cat{background:#f0edf5;color:#5a3a7e;font-size:10px}
+.badge-pend{background:#fff8e1;color:var(--wa)}.badge-dec{background:#f3f3f3;color:#888}
+
+/* ── REVIEWS TABLE ── */
+.review-row-text{font-size:13px;color:var(--tx);max-width:280px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.stars-sm{color:#e5963a;font-size:12px;letter-spacing:1px}
+
+/* ── CATEGORIES ── */
+.cat-grid-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.cat-card-admin{background:var(--white);border:1px solid var(--bol);border-radius:var(--rl);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--s0)}
+.cat-card-admin__left{display:flex;align-items:center;gap:12px}
+.cat-card-admin__icon{width:44px;height:44px;background:var(--b1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.cat-card-admin__name{font-weight:600;color:var(--dark);font-size:15px}
+.cat-card-admin__count{font-size:11.5px;color:var(--mu);margin-top:2px}
+.cat-card-admin__actions{display:flex;gap:5px}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(18,8,14,.58);z-index:400;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.overlay.hidden{display:none}
+.modal{background:var(--white);border-radius:var(--rxl);width:100%;max-width:600px;max-height:92svh;overflow-y:auto;box-shadow:var(--s3);display:flex;flex-direction:column;animation:mIn .28s var(--spring) both}
+.modal--sm{max-width:420px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 0;flex-shrink:0}
+.modal-head h2{font-family:var(--fd);font-size:21px;font-weight:700;color:var(--dark)}
+.modal-close{width:30px;height:30px;background:var(--b1);border:none;border-radius:50%;font-size:15px;color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s,color .18s;flex-shrink:0}
+.modal-close:hover{background:var(--r1);color:var(--p7)}
+.modal-body{padding:18px 22px;display:flex;flex-direction:column;gap:14px;flex:1}
+.modal-foot{padding:0 22px 22px;display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
+
+/* Form */
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:2px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.fl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mu)}
+.fl .req{color:var(--er)}
+.fi,.fs,.ft{width:100%;padding:10px 12px;border:1.5px solid var(--bo);border-radius:var(--r);font-size:14px;color:var(--dark);background:var(--white);transition:border-color .2s,box-shadow .2s;outline:none}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--p5);box-shadow:0 0 0 3px rgba(123,45,82,.1)}
+.fi.err,.fs.err{border-color:var(--er)}
+.fi::placeholder,.ft::placeholder{color:#b0909a}
+.ft{resize:vertical;min-height:78px;line-height:1.6}
+.fhint{font-size:11.5px;color:var(--mu);margin-top:3px}
+.ferr{font-size:11.5px;color:var(--er);margin-top:3px;display:none}
+.ferr.on{display:block}
+.fcheck{display:flex;gap:20px;flex-wrap:wrap}
+.fcheck-item{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--dark)}
+.fcheck-item input{width:16px;height:16px;accent-color:var(--p7);cursor:pointer}
+
+/* Image upload */
+.img-zone{border:2px dashed var(--bo);border-radius:var(--rl);overflow:hidden;background:var(--b1);cursor:pointer;transition:border-color .2s,background .2s}
+.img-zone:hover,.img-zone.drag{border-color:var(--p5);background:var(--b2)}
+.img-zone.has-img{border-style:solid;border-color:var(--p3)}
+.img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:7px;text-align:center}
+.img-placeholder .ico{font-size:34px}
+.img-placeholder p{font-size:13.5px;font-weight:500;color:var(--p7)}
+.img-placeholder span{font-size:11.5px;color:var(--mu)}
+.img-preview{position:relative;aspect-ratio:4/3}
+.img-preview img{width:100%;height:100%;object-fit:cover}
+.img-preview-rm{position:absolute;top:8px;right:8px;width:26px;height:26px;background:rgba(18,8,14,.72);color:var(--white);border:none;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.img-tabs{display:flex;border-bottom:1px solid var(--bo);background:var(--white)}
+.img-tab{flex:1;padding:9px;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border:none;background:none;cursor:pointer;color:var(--mu);transition:color .18s,border-color .18s;border-bottom:2px solid transparent;margin-bottom:-1px}
+.img-tab.on{color:var(--p7);border-color:var(--p7)}
+.img-tab-content{padding:12px}
+.img-pane{display:none}.img-pane.on{display:block}
+.drop-zone{border:2px dashed var(--bo);border-radius:var(--r);padding:24px 14px;text-align:center;cursor:pointer;transition:all .18s;background:var(--b1)}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--p5);background:var(--b2)}
+.drop-zone input{display:none}
+.drop-zone p{font-size:12.5px;color:var(--mu);margin-top:7px}
+
+/* Delete confirm */
+.del-body{padding:22px;text-align:center}
+.del-ico{font-size:42px;margin-bottom:14px}
+.del-body h3{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:7px}
+.del-body p{font-size:14px;color:var(--mu);line-height:1.6;margin-bottom:22px}
+.del-body strong{color:var(--dark);font-weight:700}
+.del-acts{display:flex;gap:9px;justify-content:center}
+
+/* Toast */
+.toast-c{position:fixed;bottom:18px;right:18px;z-index:999;display:flex;flex-direction:column;gap:7px;pointer-events:none;max-width:320px}
+.toast{background:var(--dark);color:var(--white);padding:12px 16px;border-radius:10px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:9px;pointer-events:all;box-shadow:var(--s2);animation:tIn .28s var(--spring) both}
+.toast.out{animation:tOut .25s var(--ease) both}
+.toast.ok{background:var(--ok)}.toast.er{background:var(--er)}.toast.wa{background:var(--wa)}
+.toast__c{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.55);font-size:15px;cursor:pointer;padding:0 0 0 6px}
+
+/* Responsive */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}.sidebar.on{transform:translateX(0)}
+  .main{margin-left:0}.burger-btn{display:flex}
+  .stats{grid-template-columns:1fr 1fr}
+  .fr{grid-template-columns:1fr}.fr3{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .content{padding:14px}.topbar{padding:0 14px}
+  .stats{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:14px 15px}
+  .toolbar{flex-direction:column;align-items:stretch}.search-box{max-width:100%}.toolbar__right{margin-left:0}
+  table thead{display:none}
+  td{display:flex;padding:7px 13px;align-items:center;gap:8px}
+  td::before{content:attr(data-label);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);min-width:75px;flex-shrink:0}
+  tr{display:block;border-bottom:1px solid var(--bo);padding:6px 0}
+  tr:last-child{border-bottom:none}
+  .toast-c{left:12px;right:12px;bottom:12px}
+  .fr3{grid-template-columns:1fr}
+}
+@media(max-width:400px){.stats{grid-template-columns:1fr}}
+
+/* Keyframes */
+@keyframes mIn{from{opacity:0;transform:scale(.93) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes tIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tOut{from{opacity:1}to{opacity:0;transform:translateX(30px)}}
+@keyframes fIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  </style>
 </head>
-<body data-page="admin">
+<body>
 
-  <!-- ── LOGIN SCREEN ── -->
-  <div id="adminLogin">
-    <div class="admin-login">
-      <div class="admin-login__card">
-        <div class="admin-login__logo">Annyshub</div>
-        <p class="admin-login__sub">Admin Panel — Sign in to manage products</p>
-        <form id="loginForm" novalidate>
-          <div class="form-group" style="margin-bottom:12px">
-            <label class="form-label" for="adminPass">Password</label>
-            <input class="form-input" type="password" id="adminPass" placeholder="Enter admin password" autocomplete="current-password" required />
-          </div>
-          <div class="admin-login__error" id="loginError"></div>
-          <button type="submit" class="btn btn--plum btn--full" style="margin-top:20px">Sign In</button>
-        </form>
-        <p style="margin-top:20px;font-size:12px;color:var(--muted);text-align:center">
-          Default password: <strong>annyshub2026</strong>
-        </p>
+<!-- ══════════════ LOGIN ══════════════ -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">Annyshub</div>
+    <p class="login-sub">Business Admin Panel · Sign in to manage your store</p>
+    <form id="loginForm" novalidate>
+      <div class="fg" style="margin-bottom:14px">
+        <label class="fl" for="lp">Password</label>
+        <input class="fi" type="password" id="lp" placeholder="Enter admin password" autocomplete="current-password" required/>
       </div>
-    </div>
+      <div id="lErr" style="background:#fdecea;color:#c0392b;font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:12px;display:none;border-left:3px solid #c0392b">Incorrect password. Please try again.</div>
+      <button type="submit" class="btn btn-primary btn-full btn-lg">Sign In →</button>
+    </form>
+    <div class="login-hint">Default password: <strong>annyshub2026</strong><br><span style="font-size:11px;opacity:.65">Change this before going live</span></div>
   </div>
+</div>
 
-  <!-- ── ADMIN PANEL ── -->
-  <div id="adminPanel" style="display:none">
+<!-- ══════════════ APP ══════════════ -->
+<div class="app" id="app">
 
-    <nav class="admin-nav">
-      <div class="admin-nav__brand">Annyshub <span>Admin</span></div>
-      <div class="admin-nav__actions">
-        <a href="index.html" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">↗ View Site</a>
-        <button class="btn btn--danger btn--sm" id="adminLogout">Sign Out</button>
-      </div>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__logo">
+      <div class="sidebar__logo-name">Annyshub</div>
+      <div class="sidebar__logo-tag">Admin Panel</div>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="sidebar__sec">Products</div>
+      <button class="sidebar__btn on" data-tab="products">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="7" height="7" rx="1"/><rect x="15" y="3" width="7" height="7" rx="1"/><rect x="2" y="14" width="7" height="7" rx="1"/><rect x="15" y="14" width="7" height="7" rx="1"/></svg>
+        All Products
+      </button>
+      <div class="sidebar__sec">Categories</div>
+      <button class="sidebar__btn" data-tab="categories">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Manage Categories
+      </button>
+      <div class="sidebar__sec">Reviews</div>
+      <button class="sidebar__btn" data-tab="reviews">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Customer Reviews <span id="pendingBadge" style="background:#fcd34d;color:#92400e;font-size:10px;font-weight:700;padding:2px 6px;border-radius:50px;margin-left:4px;display:none">0</span>
+      </button>
+      <div class="sidebar__sec">Danger Zone</div>
+      <button class="sidebar__btn danger" id="resetBtn">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset to Defaults
+      </button>
     </nav>
+    <div class="sidebar__foot">
+      <a class="sidebar__site-link" href="index.html" target="_blank" rel="noopener">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View Customer Site
+      </a>
+    </div>
+  </aside>
 
-    <div class="admin-content">
+  <div id="sideOverlay" onclick="closeSidebar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:99"></div>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <button class="burger-btn" id="burgerBtn" aria-label="Menu">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="topbar__title" id="topTitle">All Products</span>
+      </div>
+      <div class="topbar__right">
+        <button class="btn btn-primary" id="topAddBtn">+ Add Product</button>
+        <button class="btn btn-secondary btn-sm" id="signOutBtn">Sign Out</button>
+      </div>
+    </header>
+
+    <div class="content">
 
       <!-- Stats -->
-      <div class="admin-stats">
-        <div class="admin-stat-card">
-          <div class="admin-stat-card__label">Total Products</div>
-          <div class="admin-stat-card__value" id="statTotal">0</div>
-          <div class="admin-stat-card__sub">across all categories</div>
-        </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-card__label">In Stock</div>
-          <div class="admin-stat-card__value" id="statInStock">0</div>
-          <div class="admin-stat-card__sub">available to order</div>
-        </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-card__label">Categories</div>
-          <div class="admin-stat-card__value" id="statCats">0</div>
-          <div class="admin-stat-card__sub">active categories</div>
-        </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-card__label">Featured</div>
-          <div class="admin-stat-card__value" id="statFeatured">0</div>
-          <div class="admin-stat-card__sub">on homepage</div>
-        </div>
+      <div class="stats" id="statsRow">
+        <div class="stat accent"><div class="stat__lbl">📦 Total Products</div><div class="stat__val" id="sTot">—</div><div class="stat__sub">in catalogue</div></div>
+        <div class="stat"><div class="stat__lbl">✅ In Stock</div><div class="stat__val" id="sStock">—</div><div class="stat__sub">available to buy</div></div>
+        <div class="stat"><div class="stat__lbl">⭐ Featured</div><div class="stat__val" id="sFeat">—</div><div class="stat__sub">shown on homepage</div></div>
+        <div class="stat"><div class="stat__lbl">💬 Pending Reviews</div><div class="stat__val" id="sPend">—</div><div class="stat__sub">awaiting approval</div></div>
       </div>
 
-      <!-- Toolbar -->
-      <div class="admin-toolbar">
-        <div class="admin-search">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="search" id="adminSearch" placeholder="Search products…" autocomplete="off" />
+      <!-- Tab Panels -->
+      <!-- PRODUCTS TAB -->
+      <div class="tab-panel on" id="panel-products">
+        <div class="toolbar">
+          <div class="search-box">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" id="prodSearch" placeholder="Search products…" autocomplete="off"/>
+          </div>
+          <select class="f-select" id="prodCatFilter">
+            <option value="all">All Categories</option>
+          </select>
+          <select class="f-select" id="prodStockFilter">
+            <option value="all">All Stock</option>
+            <option value="in">In Stock</option>
+            <option value="out">Out of Stock</option>
+          </select>
+          <div class="toolbar__right">
+            <span style="font-size:12.5px;color:var(--mu)" id="prodCount"></span>
+            <button class="btn btn-primary btn-sm" id="addProdBtn">+ Add Product</button>
+          </div>
         </div>
-        <select class="admin-filter-select" id="adminCatFilter">
-          <option value="all">All Categories</option>
-          <option value="necklace">Necklaces</option>
-          <option value="bracelet">Bracelets</option>
-          <option value="watch">Wristwatches</option>
-          <option value="set">Sets</option>
-          <option value="combo">Combo Deals</option>
-        </select>
-        <button class="btn btn--plum" id="addProductBtn">+ Add Product</button>
-        <button class="btn btn--ghost btn--sm" id="resetDataBtn" style="margin-left:auto">Reset to Defaults</button>
+        <div class="table-wrap" id="prodTableWrap"></div>
       </div>
 
-      <!-- Table -->
-      <div class="admin-table-wrap">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th>Featured</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="adminTableBody">
-            <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>
-          </tbody>
-        </table>
+      <!-- CATEGORIES TAB -->
+      <div class="tab-panel" id="panel-categories">
+        <div class="toolbar">
+          <div class="toolbar__right">
+            <button class="btn btn-primary" id="addCatBtn">+ Add Category</button>
+          </div>
+        </div>
+        <div class="cat-grid-admin" id="catGrid"></div>
       </div>
 
-    </div><!-- /admin-content -->
-
-  </div><!-- /adminPanel -->
-
-  <!-- ── ADD / EDIT MODAL ── -->
-  <div class="modal-overlay hidden" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal">
-      <div class="modal__header">
-        <h2 id="modalTitle">Add New Product</h2>
-        <button class="modal__close" data-close-modal aria-label="Close">✕</button>
+      <!-- REVIEWS TAB -->
+      <div class="tab-panel" id="panel-reviews">
+        <div class="toolbar">
+          <div class="search-box">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" id="revSearch" placeholder="Search reviews…" autocomplete="off"/>
+          </div>
+          <select class="f-select" id="revStatusFilter">
+            <option value="all">All Reviews</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="declined">Declined</option>
+          </select>
+          <div class="toolbar__right"><span style="font-size:12.5px;color:var(--mu)" id="revCount"></span></div>
+        </div>
+        <div class="table-wrap" id="revTableWrap"></div>
       </div>
-      <form id="productForm" novalidate>
-        <div class="modal__body">
 
-          <!-- Image preview -->
-          <div class="img-preview" id="imgPreviewEl">
-            <div class="img-preview__placeholder"><span>🖼️</span><span>Paste image URL below to preview</span></div>
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+
+<!-- ══════════════ PRODUCT MODAL ══════════════ -->
+<div class="overlay hidden" id="prodModal" role="dialog" aria-modal="true" aria-labelledby="prodModalTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="prodModalTitle">Add New Product</h2>
+      <button class="modal-close" id="closeProdModal" aria-label="Close">✕</button>
+    </div>
+    <form id="prodForm" novalidate>
+      <div class="modal-body">
+
+        <!-- Image -->
+        <div class="fg">
+          <span class="fl">Product Image <span class="req">*</span></span>
+          <div class="img-zone" id="imgZone">
+            <div class="img-placeholder" id="imgPh"><div class="ico">🖼️</div><p>Upload or paste an image URL</p><span>JPG · PNG · WEBP · GIF</span></div>
+            <div class="img-preview" id="imgPrev" style="display:none"><img id="imgPrevEl" src="" alt="Preview"/><button type="button" class="img-preview-rm" id="rmImg" aria-label="Remove">✕</button></div>
           </div>
-
-          <div class="form-group">
-            <label class="form-label" for="formImg">Image URL <span style="color:var(--error)">*</span></label>
-            <input class="form-input" type="url" id="formImg" placeholder="https://images.unsplash.com/…" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="formName">Product Name <span style="color:var(--error)">*</span></label>
-            <input class="form-input" type="text" id="formName" placeholder="e.g. Zirconia Necklace" required />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="formCategory">Category <span style="color:var(--error)">*</span></label>
-              <select class="form-select" id="formCategory" required>
-                <option value="">Select category</option>
-                <option value="necklace">Necklace</option>
-                <option value="bracelet">Bracelet</option>
-                <option value="watch">Watch</option>
-                <option value="set">Set</option>
-                <option value="combo">Combo Deal</option>
-              </select>
+          <div style="margin-top:7px;border:1px solid var(--bo);border-radius:var(--r);overflow:hidden">
+            <div class="img-tabs">
+              <button type="button" class="img-tab on" data-itab="url">🔗 Image URL</button>
+              <button type="button" class="img-tab" data-itab="file">📁 Upload File</button>
             </div>
-            <div class="form-group">
-              <label class="form-label" for="formPrice">Price (₦) <span style="color:var(--error)">*</span></label>
-              <input class="form-input" type="number" id="formPrice" placeholder="e.g. 6500" min="0" required />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="formTag">Product Tag</label>
-            <input class="form-input" type="text" id="formTag" placeholder="100% Non Tarnish" value="100% Non Tarnish" />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="formDesc">Description</label>
-            <textarea class="form-textarea" id="formDesc" placeholder="Short product description…"></textarea>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="formRating">Rating (1–5)</label>
-              <input class="form-input" type="number" id="formRating" min="1" max="5" value="4" />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="formReviews">Review Count</label>
-              <input class="form-input" type="number" id="formReviews" min="0" value="0" />
+            <div class="img-tab-content">
+              <div class="img-pane on" id="itab-url">
+                <input class="fi" type="url" id="fImgUrl" placeholder="https://images.unsplash.com/…"/>
+                <p class="fhint">Paste any publicly accessible image link</p>
+              </div>
+              <div class="img-pane" id="itab-file">
+                <label class="drop-zone" id="dropZone">
+                  <input type="file" id="fileIn" accept="image/*"/>
+                  <div style="font-size:30px">📂</div>
+                  <strong style="font-size:13.5px;color:var(--p7);display:block;margin-top:6px">Click to choose a file</strong>
+                  <p>or drag and drop an image here</p>
+                </label>
+              </div>
             </div>
           </div>
-
-          <div style="display:flex;gap:24px;flex-wrap:wrap">
-            <label class="form-toggle">
-              <input type="checkbox" id="formInStock" checked />
-              <span>In Stock</span>
-            </label>
-            <label class="form-toggle">
-              <input type="checkbox" id="formFeatured" />
-              <span>Featured on Homepage</span>
-            </label>
-          </div>
-
+          <div class="ferr" id="imgErr">Please add a product image.</div>
         </div>
-        <div class="modal__footer">
-          <button type="button" class="btn btn--ghost" data-close-modal>Cancel</button>
-          <button type="submit" class="btn btn--plum">Save Product</button>
+
+        <div class="fg">
+          <label class="fl" for="fName">Product Name <span class="req">*</span></label>
+          <input class="fi" type="text" id="fName" placeholder="e.g. Zirconia Necklace" required/>
+          <div class="ferr" id="nameErr">Product name is required.</div>
         </div>
-      </form>
+
+        <div class="fr">
+          <div class="fg">
+            <label class="fl" for="fCat">Category <span class="req">*</span></label>
+            <select class="fs" id="fCat" required>
+              <option value="">Select category…</option>
+            </select>
+            <div class="ferr" id="catErr">Category is required.</div>
+          </div>
+          <div class="fg">
+            <label class="fl" for="fPrice">Price (₦) <span class="req">*</span></label>
+            <input class="fi" type="number" id="fPrice" placeholder="e.g. 6500" min="0" step="50" required/>
+            <div class="ferr" id="priceErr">Enter a valid price.</div>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="fTag">Product Tag</label>
+          <input class="fi" type="text" id="fTag" placeholder="100% Non Tarnish"/>
+          <p class="fhint">Short label shown under the product name</p>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="fDesc">Description</label>
+          <textarea class="ft" id="fDesc" placeholder="Describe the product — material, style, sizing…"></textarea>
+        </div>
+
+        <div class="fr">
+          <div class="fg">
+            <label class="fl" for="fRating">Star Rating (1–5)</label>
+            <input class="fi" type="number" id="fRating" min="1" max="5" value="4"/>
+          </div>
+          <div class="fg">
+            <label class="fl" for="fReviews">Review Count</label>
+            <input class="fi" type="number" id="fReviews" min="0" value="0"/>
+          </div>
+        </div>
+
+        <div class="fcheck">
+          <label class="fcheck-item"><input type="checkbox" id="fInStock" checked/><span>✅ In Stock</span></label>
+          <label class="fcheck-item"><input type="checkbox" id="fFeatured"/><span>⭐ Featured on Homepage</span></label>
+        </div>
+
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-secondary" id="cancelProd">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveProdBtn">Save Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════ CATEGORY MODAL ══════════════ -->
+<div class="overlay hidden" id="catModal" role="dialog" aria-modal="true">
+  <div class="modal modal--sm">
+    <div class="modal-head">
+      <h2 id="catModalTitle">Add Category</h2>
+      <button class="modal-close" id="closeCatModal" aria-label="Close">✕</button>
+    </div>
+    <form id="catForm" novalidate>
+      <div class="modal-body">
+        <div class="fg">
+          <label class="fl" for="cLabel">Category Name <span class="req">*</span></label>
+          <input class="fi" type="text" id="cLabel" placeholder="e.g. Anklets" required/>
+          <div class="ferr" id="cLabelErr">Category name is required.</div>
+        </div>
+        <div class="fr">
+          <div class="fg">
+            <label class="fl" for="cId">URL Slug <span class="req">*</span></label>
+            <input class="fi" type="text" id="cId" placeholder="e.g. anklet" required/>
+            <p class="fhint">Lowercase, no spaces</p>
+            <div class="ferr" id="cIdErr">Slug is required.</div>
+          </div>
+          <div class="fg">
+            <label class="fl" for="cIcon">Icon (emoji)</label>
+            <input class="fi" type="text" id="cIcon" placeholder="e.g. 💎" maxlength="4"/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-secondary" id="cancelCat">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Category</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════ DELETE MODAL ══════════════ -->
+<div class="overlay hidden" id="delModal" role="dialog" aria-modal="true">
+  <div class="modal modal--sm">
+    <div class="modal-head">
+      <h2 style="color:var(--er)">Delete</h2>
+      <button class="modal-close" id="closeDelModal" aria-label="Close">✕</button>
+    </div>
+    <div class="del-body">
+      <div class="del-ico">🗑️</div>
+      <h3>Are you sure?</h3>
+      <p id="delMsg">This cannot be undone.</p>
+      <div class="del-acts">
+        <button class="btn btn-secondary" id="cancelDel">Cancel</button>
+        <button class="btn btn-danger btn-lg" id="confirmDel">Yes, Delete</button>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- ── DELETE CONFIRM MODAL ── -->
-  <div class="modal-overlay hidden" id="deleteModal" role="dialog" aria-modal="true">
-    <div class="modal" style="max-width:420px">
-      <div class="modal__header">
-        <h2 style="color:var(--error)">Delete Product</h2>
-        <button class="modal__close" data-close-delete aria-label="Close">✕</button>
-      </div>
-      <div class="delete-confirm">
-        <p style="font-size:32px">🗑️</p>
-        <p id="deleteMsg"></p>
-        <div class="delete-confirm__actions">
-          <button class="btn btn--ghost" data-close-delete>Cancel</button>
-          <button class="btn btn--danger" id="confirmDelete">Yes, Delete</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="toast-c" id="toastC"></div>
 
-  <div class="toast-wrap" id="toastWrap"></div>
-  <script src="data.js"></script><script src="script.js"></script>
+<script src="data.js"></script>
+<script>
+'use strict';
+/* ── AUTH ── */
+const PASS = 'annyshub2026';
+const authed = () => sessionStorage.getItem('ann_adm') === '1';
+const loginWrap = document.getElementById('loginWrap');
+const appEl     = document.getElementById('app');
+const showApp   = () => { loginWrap.style.display='none'; appEl.classList.add('on'); boot(); };
+const showLogin = () => { appEl.classList.remove('on'); loginWrap.style.display=''; };
+
+if (authed()) showApp();
+
+document.getElementById('loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const err = document.getElementById('lErr');
+  if (document.getElementById('lp').value === PASS) {
+    sessionStorage.setItem('ann_adm','1'); err.style.display='none'; showApp();
+  } else {
+    err.style.display='block'; document.getElementById('lp').value=''; document.getElementById('lp').focus();
+  }
+});
+document.getElementById('signOutBtn').addEventListener('click', () => { sessionStorage.removeItem('ann_adm'); showLogin(); });
+
+/* ── TOAST ── */
+const TC = document.getElementById('toastC');
+function toast(msg, type='') {
+  const t = document.createElement('div');
+  t.className = `toast${type?' '+type:''}`;
+  t.innerHTML = `<span>${msg}</span><button class="toast__c" aria-label="Close">✕</button>`;
+  t.querySelector('.toast__c').onclick = () => dim(t);
+  TC.appendChild(t);
+  const timer = setTimeout(() => dim(t), 3400);
+  t._t = timer;
+}
+function dim(t) { clearTimeout(t._t); t.classList.add('out'); setTimeout(() => t.remove(), 280); }
+const tok  = m => toast(m,'ok');
+const terr = m => toast(m,'er');
+const tinfo= m => toast(m);
+
+/* ── SIDEBAR ── */
+const sidebar = document.getElementById('sidebar');
+const sideOv  = document.getElementById('sideOverlay');
+function closeSidebar() { sidebar.classList.remove('on'); sideOv.style.display='none'; document.body.style.overflow=''; }
+window.closeSidebar = closeSidebar;
+document.getElementById('burgerBtn')?.addEventListener('click', () => {
+  sidebar.classList.toggle('on');
+  sideOv.style.display = sidebar.classList.contains('on') ? 'block' : 'none';
+  document.body.style.overflow = sidebar.classList.contains('on') ? 'hidden' : '';
+});
+
+/* ── TABS ── */
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  document.getElementById(`panel-${name}`)?.classList.add('on');
+  document.querySelectorAll('.sidebar__btn[data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+  const titles = { products:'All Products', categories:'Manage Categories', reviews:'Customer Reviews' };
+  document.getElementById('topTitle').textContent = titles[name] || name;
+  document.getElementById('topAddBtn').style.display = name === 'products' ? '' : 'none';
+  closeSidebar();
+}
+document.querySelectorAll('.sidebar__btn[data-tab]').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+/* ── STATE ── */
+let prodSearch='', prodCat='all', prodStock='all';
+let revSearch='', revStatus='all';
+let editProdId=null, editCatId=null, deleteTarget=null, deleteType=null;
+let curImgSrc='';
+
+/* ── BOOT ── */
+function boot() {
+  renderStats(); renderProdTable(); renderCatGrid(); renderRevTable();
+  populateCatDropdowns();
+  bindToolbar(); bindSidebar(); bindProdModal(); bindCatModal(); bindDelModal();
+  document.getElementById('addProdBtn')?.addEventListener('click', openAddProd);
+  document.getElementById('topAddBtn')?.addEventListener('click', openAddProd);
+  document.getElementById('addCatBtn')?.addEventListener('click', openAddCat);
+  document.getElementById('resetBtn')?.addEventListener('click', () => {
+    if (!confirm('⚠️ Reset ALL products, categories and reviews to defaults? All your changes will be lost.')) return;
+    AnnyshubData.resetAll(); renderAll(); tinfo('Reset to defaults');
+  });
+}
+
+/* ── STATS ── */
+function renderStats() {
+  const all  = AnnyshubData.getAll();
+  const pend = AnnyshubData.getPendingReviews().length;
+  document.getElementById('sTot').textContent    = all.length;
+  document.getElementById('sStock').textContent  = all.filter(p=>p.inStock).length;
+  document.getElementById('sFeat').textContent   = all.filter(p=>p.featured).length;
+  document.getElementById('sPend').textContent   = pend;
+  const pb = document.getElementById('pendingBadge');
+  if (pb) { pb.textContent=pend; pb.style.display=pend>0?'':'none'; }
+}
+
+function renderAll() { renderStats(); renderProdTable(); renderCatGrid(); renderRevTable(); populateCatDropdowns(); }
+
+/* ── PRODUCTS TABLE ── */
+function getProdFiltered() {
+  let list = AnnyshubData.getAll();
+  if (prodCat !== 'all')    list = list.filter(p => p.category === prodCat);
+  if (prodStock === 'in')   list = list.filter(p => p.inStock);
+  if (prodStock === 'out')  list = list.filter(p => !p.inStock);
+  if (prodSearch) { const q=prodSearch.toLowerCase(); list=list.filter(p=>p.name.toLowerCase().includes(q)||(p.description||'').toLowerCase().includes(q)||(p.category||'').includes(q)); }
+  return list;
+}
+
+function renderProdTable() {
+  const wrap = document.getElementById('prodTableWrap');
+  const list = getProdFiltered();
+  document.getElementById('prodCount').textContent = `${list.length} product${list.length!==1?'s':''}`;
+  if (!list.length) { wrap.innerHTML=`<div class="table-empty"><div class="ico">🔍</div><h3>No products found</h3><p>Try adjusting your filters.</p></div>`; return; }
+  wrap.innerHTML = `<table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Featured</th><th>Actions</th></tr></thead><tbody>${list.map(p=>`
+    <tr>
+      <td data-label="Product"><div class="td-prod"><div class="td-img"><img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'"/></div><div><div class="td-name" title="${p.name}">${p.name}</div><div class="td-sub">${p.tag||''}</div></div></div></td>
+      <td data-label="Category"><span class="badge badge-cat">${p.category}</span></td>
+      <td data-label="Price"><span class="td-price">₦${p.price.toLocaleString()}</span></td>
+      <td data-label="Stock"><span class="badge ${p.inStock?'badge-in':'badge-out'}">${p.inStock?'✓ In Stock':'✕ Out of Stock'}</span></td>
+      <td data-label="Featured">${p.featured?'<span class="badge badge-feat">⭐ Featured</span>':'<span style="color:var(--mu)">—</span>'}</td>
+      <td data-label="Actions"><div class="td-actions"><button class="btn btn-secondary btn-sm" data-ep="${p.id}">✏️ Edit</button><button class="btn btn-danger btn-sm" data-dp="${p.id}" data-dn="${p.name}">🗑 Delete</button></div></td>
+    </tr>`).join('')}</tbody></table>`;
+  wrap.querySelectorAll('[data-ep]').forEach(b => b.addEventListener('click', () => openEditProd(b.dataset.ep)));
+  wrap.querySelectorAll('[data-dp]').forEach(b => b.addEventListener('click', () => openDel('product', b.dataset.dp, b.dataset.dn)));
+}
+
+/* ── CATEGORIES GRID ── */
+function renderCatGrid() {
+  const grid = document.getElementById('catGrid');
+  const cats = AnnyshubData.getCats();
+  if (!cats.length) { grid.innerHTML='<p style="color:var(--mu)">No categories yet. Add one above.</p>'; return; }
+  grid.innerHTML = cats.map(c => {
+    const count = AnnyshubData.getByCategory(c.id).length;
+    return `<div class="cat-card-admin">
+      <div class="cat-card-admin__left">
+        <div class="cat-card-admin__icon">${c.icon||'💎'}</div>
+        <div><div class="cat-card-admin__name">${c.label}</div><div class="cat-card-admin__count">${count} product${count!==1?'s':''} · /${c.id}</div></div>
+      </div>
+      <div class="cat-card-admin__actions">
+        <button class="btn btn-secondary btn-sm" data-ec="${c.id}">✏️</button>
+        <button class="btn btn-danger btn-sm" data-dc="${c.id}" data-dcn="${c.label}">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('[data-ec]').forEach(b => b.addEventListener('click', () => openEditCat(b.dataset.ec)));
+  grid.querySelectorAll('[data-dc]').forEach(b => b.addEventListener('click', () => openDel('category', b.dataset.dc, b.dataset.dcn)));
+}
+
+/* ── REVIEWS TABLE ── */
+function getRevFiltered() {
+  let list = AnnyshubData.getReviews();
+  if (revStatus !== 'all') list = list.filter(r => r.status === revStatus);
+  if (revSearch) { const q=revSearch.toLowerCase(); list=list.filter(r=>r.author.toLowerCase().includes(q)||r.text.toLowerCase().includes(q)); }
+  return list;
+}
+
+function renderRevTable() {
+  const wrap = document.getElementById('revTableWrap');
+  const list = getRevFiltered();
+  document.getElementById('revCount').textContent = `${list.length} review${list.length!==1?'s':''}`;
+  if (!list.length) { wrap.innerHTML=`<div class="table-empty"><div class="ico">💬</div><h3>No reviews found</h3><p>Reviews customers submit will appear here for approval.</p></div>`; return; }
+  wrap.innerHTML = `<table><thead><tr><th>Author</th><th>Product</th><th>Rating</th><th>Review</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>${list.map(r=>{
+    const prod = AnnyshubData.getById(r.productId);
+    const statusBadge = r.status==='approved'?'<span class="badge badge-in">✓ Approved</span>':r.status==='declined'?'<span class="badge badge-dec">✕ Declined</span>':'<span class="badge badge-pend">⏳ Pending</span>';
+    const actions = r.status==='pending'
+      ? `<button class="btn btn-ok btn-sm" data-ar="${r.id}">✓ Approve</button><button class="btn btn-danger btn-sm" data-dr="${r.id}">✕ Decline</button>`
+      : r.status==='approved'
+      ? `<button class="btn btn-danger btn-sm" data-dr="${r.id}">✕ Decline</button><button class="btn btn-danger btn-sm" data-xr="${r.id}">🗑 Delete</button>`
+      : `<button class="btn btn-ok btn-sm" data-ar="${r.id}">✓ Approve</button><button class="btn btn-danger btn-sm" data-xr="${r.id}">🗑 Delete</button>`;
+    return `<tr>
+      <td data-label="Author"><strong>${r.author}</strong><br><span style="font-size:11.5px;color:var(--mu)">${r.location||''}</span></td>
+      <td data-label="Product"><span style="font-size:13px;color:var(--p5)">${prod?.name||'Unknown product'}</span></td>
+      <td data-label="Rating"><span class="stars-sm">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></td>
+      <td data-label="Review"><div class="review-row-text">"${r.text}"</div></td>
+      <td data-label="Status">${statusBadge}</td>
+      <td data-label="Date" style="white-space:nowrap;font-size:12.5px;color:var(--mu)">${r.date}</td>
+      <td data-label="Actions"><div class="td-actions" style="flex-wrap:wrap">${actions}</div></td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+  wrap.querySelectorAll('[data-ar]').forEach(b => b.addEventListener('click', () => { AnnyshubData.approveReview(b.dataset.ar); tok('Review approved — now visible to customers'); renderAll(); }));
+  wrap.querySelectorAll('[data-dr]').forEach(b => b.addEventListener('click', () => { AnnyshubData.declineReview(b.dataset.dr); tinfo('Review declined'); renderAll(); }));
+  wrap.querySelectorAll('[data-xr]').forEach(b => b.addEventListener('click', () => openDel('review', b.dataset.xr, 'this review')));
+}
+
+/* ── POPULATE DROPDOWNS ── */
+function populateCatDropdowns() {
+  const cats = AnnyshubData.getCats();
+  const opts = cats.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+  const filt = `<option value="all">All Categories</option>${opts}`;
+  document.getElementById('prodCatFilter').innerHTML = filt;
+  document.getElementById('prodCatFilter').value = prodCat;
+  document.getElementById('fCat').innerHTML = `<option value="">Select category…</option>${opts}`;
+}
+
+/* ── TOOLBAR ── */
+function bindToolbar() {
+  document.getElementById('prodSearch').addEventListener('input', e => { prodSearch=e.target.value.trim(); renderProdTable(); });
+  document.getElementById('prodCatFilter').addEventListener('change', e => { prodCat=e.target.value; renderProdTable(); });
+  document.getElementById('prodStockFilter').addEventListener('change', e => { prodStock=e.target.value; renderProdTable(); });
+  document.getElementById('revSearch').addEventListener('input', e => { revSearch=e.target.value.trim(); renderRevTable(); });
+  document.getElementById('revStatusFilter').addEventListener('change', e => { revStatus=e.target.value; renderRevTable(); });
+}
+
+function bindSidebar() {}
+
+/* ── PRODUCT MODAL ── */
+function setImg(src) {
+  curImgSrc=src;
+  document.getElementById('imgPh').style.display='none';
+  document.getElementById('imgPrev').style.display='';
+  document.getElementById('imgPrevEl').src=src;
+  document.getElementById('imgZone').classList.add('has-img');
+}
+function clearImg() {
+  curImgSrc='';
+  document.getElementById('imgPh').style.display='';
+  document.getElementById('imgPrev').style.display='none';
+  document.getElementById('imgPrevEl').src='';
+  document.getElementById('imgZone').classList.remove('has-img');
+  document.getElementById('fImgUrl').value='';
+  document.getElementById('fileIn').value='';
+}
+function openAddProd() {
+  editProdId=null; document.getElementById('prodModalTitle').textContent='Add New Product'; document.getElementById('saveProdBtn').textContent='Add Product';
+  document.getElementById('prodForm').reset(); clearImg(); clearProdErrors();
+  document.getElementById('prodModal').classList.remove('hidden'); document.body.style.overflow='hidden';
+  document.getElementById('fName').focus();
+}
+function openEditProd(id) {
+  const p = AnnyshubData.getById(id); if (!p) return;
+  editProdId=id; document.getElementById('prodModalTitle').textContent='Edit Product'; document.getElementById('saveProdBtn').textContent='Save Changes';
+  document.getElementById('fName').value=p.name||'';
+  document.getElementById('fCat').value=p.category||'';
+  document.getElementById('fPrice').value=p.price||'';
+  document.getElementById('fTag').value=p.tag||'100% Non Tarnish';
+  document.getElementById('fDesc').value=p.description||'';
+  document.getElementById('fRating').value=p.rating||4;
+  document.getElementById('fReviews').value=p.reviews||0;
+  document.getElementById('fInStock').checked=!!p.inStock;
+  document.getElementById('fFeatured').checked=!!p.featured;
+  if (p.img) { document.getElementById('fImgUrl').value=p.img; setImg(p.img); } else clearImg();
+  clearProdErrors(); document.getElementById('prodModal').classList.remove('hidden'); document.body.style.overflow='hidden';
+}
+function closeProdModal() { document.getElementById('prodModal').classList.add('hidden'); document.body.style.overflow=''; editProdId=null; clearImg(); }
+function clearProdErrors() { document.querySelectorAll('#prodForm .ferr').forEach(e=>e.classList.remove('on')); document.querySelectorAll('#prodForm .fi,.fs').forEach(e=>e.classList.remove('err')); }
+function validateProd() {
+  clearProdErrors(); let ok=true;
+  const img=curImgSrc||document.getElementById('fImgUrl').value.trim();
+  if (!img) { document.getElementById('imgErr').classList.add('on'); ok=false; }
+  const name=document.getElementById('fName').value.trim();
+  if (!name) { document.getElementById('fName').classList.add('err'); document.getElementById('nameErr').classList.add('on'); ok=false; }
+  const cat=document.getElementById('fCat').value;
+  if (!cat) { document.getElementById('fCat').classList.add('err'); document.getElementById('catErr').classList.add('on'); ok=false; }
+  const price=parseFloat(document.getElementById('fPrice').value);
+  if (!price||price<=0) { document.getElementById('fPrice').classList.add('err'); document.getElementById('priceErr').classList.add('on'); ok=false; }
+  return ok;
+}
+
+function bindProdModal() {
+  document.getElementById('closeProdModal').addEventListener('click', closeProdModal);
+  document.getElementById('cancelProd').addEventListener('click', closeProdModal);
+  document.getElementById('prodModal').addEventListener('click', e => { if(e.target===document.getElementById('prodModal')) closeProdModal(); });
+  document.getElementById('rmImg').addEventListener('click', e => { e.stopPropagation(); clearImg(); });
+
+  // Image tabs
+  document.querySelectorAll('.img-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.img-tab').forEach(t=>t.classList.remove('on'));
+      document.querySelectorAll('.img-pane').forEach(p=>p.classList.remove('on'));
+      tab.classList.add('on');
+      document.getElementById(`itab-${tab.dataset.itab}`)?.classList.add('on');
+    });
+  });
+
+  // URL input
+  document.getElementById('fImgUrl').addEventListener('input', e => { const v=e.target.value.trim(); if(v) setImg(v); else clearImg(); });
+
+  // File input
+  const fi = document.getElementById('fileIn');
+  const dz = document.getElementById('dropZone');
+  const readFile = file => { if(!file||!file.type.startsWith('image/')) return; const r=new FileReader(); r.onload=ev=>setImg(ev.target.result); r.readAsDataURL(file); };
+  fi.addEventListener('change', () => readFile(fi.files[0]));
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag'); readFile(e.dataTransfer.files[0]); });
+
+  // Form submit
+  document.getElementById('prodForm').addEventListener('submit', e => {
+    e.preventDefault(); if(!validateProd()) { terr('Please fix the errors above.'); return; }
+    const imgSrc=curImgSrc||document.getElementById('fImgUrl').value.trim();
+    const data={name:document.getElementById('fName').value.trim(),category:document.getElementById('fCat').value,price:parseFloat(document.getElementById('fPrice').value),tag:document.getElementById('fTag').value.trim()||'100% Non Tarnish',description:document.getElementById('fDesc').value.trim(),img:imgSrc,rating:parseInt(document.getElementById('fRating').value)||4,reviews:parseInt(document.getElementById('fReviews').value)||0,inStock:document.getElementById('fInStock').checked,featured:document.getElementById('fFeatured').checked};
+    const btn=document.getElementById('saveProdBtn'); btn.disabled=true; btn.textContent='Saving…';
+    setTimeout(() => {
+      if (editProdId) { AnnyshubData.updateProduct(editProdId,data); tok(`"${data.name}" updated`); } else { AnnyshubData.addProduct(data); tok(`"${data.name}" added to catalogue`); }
+      closeProdModal(); renderAll(); btn.disabled=false;
+    }, 350);
+  });
+
+  document.addEventListener('keydown', e => { if(e.key==='Escape'){closeProdModal();closeCatModal();closeDelModal();} });
+}
+
+/* ── CATEGORY MODAL ── */
+function openAddCat() { editCatId=null; document.getElementById('catModalTitle').textContent='Add Category'; document.getElementById('catForm').reset(); document.getElementById('cLabelErr').classList.remove('on'); document.getElementById('cIdErr').classList.remove('on'); document.getElementById('catModal').classList.remove('hidden'); document.body.style.overflow='hidden'; document.getElementById('cLabel').focus(); }
+function openEditCat(id) {
+  const c=AnnyshubData.getCatById(id); if(!c) return;
+  editCatId=id; document.getElementById('catModalTitle').textContent='Edit Category';
+  document.getElementById('cLabel').value=c.label||''; document.getElementById('cId').value=c.id||''; document.getElementById('cIcon').value=c.icon||'';
+  document.getElementById('cId').disabled=true; // can't change slug on edit
+  document.getElementById('catModal').classList.remove('hidden'); document.body.style.overflow='hidden';
+}
+function closeCatModal() { document.getElementById('catModal').classList.add('hidden'); document.body.style.overflow=''; editCatId=null; document.getElementById('cId').disabled=false; }
+window.closeCatModal = closeCatModal;
+
+function bindCatModal() {
+  document.getElementById('closeCatModal').addEventListener('click', closeCatModal);
+  document.getElementById('cancelCat').addEventListener('click', closeCatModal);
+  document.getElementById('catModal').addEventListener('click', e=>{ if(e.target===document.getElementById('catModal')) closeCatModal(); });
+  // Auto-slug from label
+  document.getElementById('cLabel').addEventListener('input', e => {
+    if (!editCatId) document.getElementById('cId').value = e.target.value.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  });
+  document.getElementById('catForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const label=document.getElementById('cLabel').value.trim(); const cid=document.getElementById('cId').value.trim().toLowerCase();
+    let ok=true;
+    if(!label){document.getElementById('cLabelErr').classList.add('on');ok=false;}else{document.getElementById('cLabelErr').classList.remove('on');}
+    if(!cid){document.getElementById('cIdErr').classList.add('on');ok=false;}else{document.getElementById('cIdErr').classList.remove('on');}
+    if(!ok) return;
+    const data={id:cid,label,icon:document.getElementById('cIcon').value.trim()||'💎',page:'collections.html'};
+    if (editCatId) { AnnyshubData.updateCat(editCatId, {label:data.label,icon:data.icon}); tok(`Category "${label}" updated`); }
+    else { const res=AnnyshubData.addCat(data); if(!res){terr('A category with this slug already exists.');return;} tok(`Category "${label}" added`); }
+    closeCatModal(); renderAll();
+  });
+}
+
+/* ── DELETE MODAL ── */
+function openDel(type, id, name) { deleteTarget=id; deleteType=type; document.getElementById('delMsg').innerHTML=`You are about to permanently delete <strong>"${name}"</strong>. This cannot be undone.`; document.getElementById('delModal').classList.remove('hidden'); document.body.style.overflow='hidden'; }
+function closeDelModal() { document.getElementById('delModal').classList.add('hidden'); document.body.style.overflow=''; deleteTarget=null; deleteType=null; }
+window.closeDelModal = closeDelModal;
+
+function bindDelModal() {
+  document.getElementById('closeDelModal').addEventListener('click', closeDelModal);
+  document.getElementById('cancelDel').addEventListener('click', closeDelModal);
+  document.getElementById('delModal').addEventListener('click', e=>{if(e.target===document.getElementById('delModal'))closeDelModal();});
+  document.getElementById('confirmDel').addEventListener('click', () => {
+    if (!deleteTarget) return;
+    if (deleteType==='product')  { AnnyshubData.removeProduct(deleteTarget);  tok('Product deleted'); }
+    if (deleteType==='category') { AnnyshubData.removeCat(deleteTarget);      tok('Category deleted'); }
+    if (deleteType==='review')   { AnnyshubData.deleteReview(deleteTarget);   tinfo('Review deleted'); }
+    closeDelModal(); renderAll();
+  });
+}
+</script>
 </body>
 </html>
