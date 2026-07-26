@@ -252,67 +252,56 @@ tr:hover td{background:#fdf8f9}
 
   /* ── CARD-BASED LISTS instead of cramped tables ── */
   .table-wrap{background:none;border:none;box-shadow:none;overflow:visible}
-  table,thead{display:none}
-  tbody{display:flex;flex-direction:column;gap:10px}
+  table{display:block;width:100%}
+  thead{display:none}
+  tbody{display:flex;flex-direction:column;gap:10px;width:100%}
   tr{
-    display:flex!important;flex-direction:column;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:10px;row-gap:8px;
     background:var(--white);border:1px solid var(--bol);border-radius:14px;
-    padding:14px;box-shadow:var(--s0);gap:10px;
+    padding:14px;box-shadow:var(--s0);
+    width:100%;
   }
   tr:hover td{background:none}
 
-  /* Product card row */
-  td{display:block;padding:0;border:none;font-size:13.5px}
+  /* Reset cell defaults for card layout */
+  td{display:flex;align-items:center;gap:6px;padding:0;border:none;font-size:13.5px}
   td::before{content:none}
 
-  /* First cell = product/author info, shown as a card header */
+  /* Card header: product/author info spans full width */
   td[data-label="Product"],td[data-label="Author"]{
-    display:flex;align-items:center;gap:10px;padding-bottom:10px;
-    border-bottom:1px solid var(--bol);
+    grid-column:1/-1;
+    display:flex;align-items:center;gap:10px;
+    padding-bottom:10px;border-bottom:1px solid var(--bol);
   }
   .td-img{width:46px;height:46px}
   .td-name{max-width:none;font-size:14.5px}
 
-  /* Meta row: category / price / stock / featured shown as inline chips */
+  /* Full-width rows: review text and action buttons */
+  td[data-label="Review"]{grid-column:1/-1}
+  td[data-label="Actions"]{
+    grid-column:1/-1;
+    padding-top:10px;border-top:1px solid var(--bol);margin-top:2px;
+  }
+
+  /* Meta chips (Category/Price/Stock/Featured/Rating/Status/Date):
+     stack their mini-label above the value, shown 2-per-row via the grid */
   td[data-label="Category"],td[data-label="Price"],td[data-label="Stock"],
   td[data-label="Featured"],td[data-label="Rating"],td[data-label="Status"],
-  td[data-label="Date"],td[data-label="Product"]:not(:first-child){
-    display:inline-flex;align-items:center;gap:6px;
+  td[data-label="Date"]{
+    flex-direction:column;align-items:flex-start;gap:2px;
   }
-  tr > td[data-label="Category"],tr > td[data-label="Price"],
-  tr > td[data-label="Stock"],tr > td[data-label="Featured"]{
-    display:inline-block;margin-right:0;
+  td[data-label="Category"]::before,td[data-label="Price"]::before,
+  td[data-label="Stock"]::before,td[data-label="Featured"]::before,
+  td[data-label="Rating"]::before,td[data-label="Status"]::before,
+  td[data-label="Date"]::before{
+    content:attr(data-label);
+    font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);
   }
-
-  /* Turn the 4 meta cells into a horizontal chip row */
-  td[data-label="Category"]::after,
-  td[data-label="Price"]::after,
-  td[data-label="Stock"]::after,
-  td[data-label="Featured"]::after{content:''}
-
-  /* Group meta cells into a flex row using a wrapper look */
-  td[data-label="Category"]{order:1}
-  td[data-label="Price"]{order:2;font-weight:700}
-  td[data-label="Stock"]{order:3}
-  td[data-label="Featured"]{order:4}
-
-  tr{display:grid!important;grid-template-columns:1fr 1fr;column-gap:10px;row-gap:8px}
-  td[data-label="Product"],td[data-label="Author"]{grid-column:1/-1}
-  td[data-label="Review"]{grid-column:1/-1;order:5}
-  td[data-label="Actions"]{grid-column:1/-1;order:99;padding-top:10px;border-top:1px solid var(--bol);margin-top:2px}
 
   .td-price{font-size:16px}
   .review-row-text{max-width:none;font-size:13px}
-
-  /* Show tiny labels inline before each chip value on mobile for clarity */
-  td[data-label]:not([data-label="Product"]):not([data-label="Author"]):not([data-label="Review"]):not([data-label="Actions"])::before{
-    content:attr(data-label);
-    font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);
-    display:block;margin-bottom:2px;width:100%;
-  }
-  td[data-label]:not([data-label="Product"]):not([data-label="Author"]):not([data-label="Review"]):not([data-label="Actions"]){
-    flex-direction:column;align-items:flex-start;gap:2px;
-  }
 
   /* Actions: full-width, stacked buttons for easy tapping */
   .td-actions{display:flex;flex-direction:column;gap:7px;width:100%}
