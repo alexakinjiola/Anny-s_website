@@ -46,11 +46,19 @@ const Cart = (() => {
       b.classList.toggle('hidden', hide);
       if (!hide) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
     });
-    // Mobile cart row
+    // Mobile cart row (in hamburger menu)
     const mbBadge = document.getElementById('mobileCartBadge');
     if (mbBadge) { mbBadge.textContent = n; mbBadge.style.display = n > 0 ? '' : 'none'; }
     const mbCount = document.getElementById('mobileCartCount');
     if (mbCount) mbCount.textContent = n > 0 ? `${n} item${n > 1 ? 's' : ''}` : '';
+    // Bottom nav badge
+    const bnavBadge = document.getElementById('bnavCartBadge');
+    if (bnavBadge) {
+      bnavBadge.textContent = n > 9 ? '9+' : n;
+      const showing = bnavBadge.classList.contains('show');
+      bnavBadge.classList.toggle('show', n > 0);
+      if (n > 0 && !showing) { bnavBadge.classList.remove('pop'); void bnavBadge.offsetWidth; bnavBadge.classList.add('pop'); }
+    }
   };
 
   const updateBadge = _updateAllBadges; // public alias
@@ -138,6 +146,22 @@ const Toast = (() => {
     sInput?.addEventListener('keydown', e => {
       if (e.key === 'Enter' && sInput.value.trim()) location.href = `search.html?q=${encodeURIComponent(sInput.value.trim())}`;
       if (e.key === 'Escape') sBox.classList.remove('open');
+    });
+  }
+
+  // Bottom nav (mobile) — active state + search trigger
+  const bnavItems = document.querySelectorAll('.bnav-item[data-bnav]');
+  if (bnavItems.length) {
+    const BNAV_MAP = {
+      home:'home', collections:'collections', necklaces:'collections', bracelets:'collections',
+      wristwatches:'collections', product:'collections', search:'search', cart:'cart',
+      about:'about', 'how-to-order':'home'
+    };
+    const activeBnav = BNAV_MAP[page] || '';
+    bnavItems.forEach(item => item.classList.toggle('active', item.dataset.bnav === activeBnav));
+    document.getElementById('bnavSearch')?.addEventListener('click', e => {
+      e.preventDefault();
+      location.href = 'search.html';
     });
   }
 })();
